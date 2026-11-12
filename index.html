@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="kk" class="h-full bg-slate-900">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заң және медицина: Дәрігер құқығы мен символдары</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            emerald: {
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+            },
+            cyan: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(6, 182, 212, 0.3);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="h-full text-slate-100 font-sans flex flex-col antialiased selection:bg-cyan-500 selection:text-slate-900">
+
+  <!-- TOP HEADER & NAVBAR -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-scale-balanced"></i>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            Заң мен Медицина
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">Интерактивті оқу платформысы</p>
+        </div>
+      </div>
+
+      <!-- SCORE DASHBOARD IN HEADER -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/50">
+          <i class="fa-solid fa-trophy text-amber-400 text-sm"></i>
+          <span class="text-xs font-medium text-slate-300">Ұпай:</span>
+          <span id="global-score" class="text-sm font-bold text-cyan-400">0</span>
+        </div>
+        <button id="reset-btn" onclick="resetAllProgress()" class="text-xs text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-1 bg-slate-800/40 hover:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700/40">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span class="hidden sm:inline">Қайта бастау</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <div class="bg-slate-950 border-b border-slate-800/60 sticky top-16 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 sm:space-x-4 overflow-x-auto custom-scrollbar py-2">
+      <button onclick="switchTab('quiz')" id="tab-quiz" class="nav-tab active flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 shadow-md">
+        <i class="fa-solid fa-clipboard-question"></i>
+        1. Ситуациялық тест
+      </button>
+      <button onclick="switchTab('matching')" id="tab-matching" class="nav-tab flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+        <i class="fa-solid fa-staff-snake"></i>
+        2. Символдар сәйкестігі
+      </button>
+      <button onclick="switchTab('explorer')" id="tab-explorer" class="nav-tab flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap text-slate-400 hover:text-slate-200 hover:bg-slate-800/60">
+        <i class="fa-solid fa-book-bookmark"></i>
+        3. Заңнама навигаторы
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- SECTION 1: QUIZ / TEST -->
+    <section id="section-quiz" class="tab-content block">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- QUIZ MAIN CONTAINER -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
+            <!-- Progress Bar -->
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+              <span>Сұрақ <span id="quiz-current-num">1</span> / <span id="quiz-total-num">5</span></span>
+              <span id="quiz-progress-percent" class="font-bold text-cyan-400">20%</span>
+            </div>
+            <div class="w-full h-2 bg-slate-800 rounded-full mb-6 overflow-hidden">
+              <div id="quiz-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-300 w-1/5"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="quiz-question-box" class="space-y-6">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-cyan-400 border border-slate-700" id="quiz-tag">
+                <i class="fa-solid fa-gavel"></i> Ситуациялық Кейс
+              </div>
+              <h2 id="quiz-question-text" class="text-lg sm:text-xl font-semibold text-slate-100 leading-relaxed">
+                Сұрақ жүктелуде...
+              </h2>
+
+              <!-- Options -->
+              <div id="quiz-options" class="space-y-3 pt-2">
+                <!-- JavaScript handles option cards -->
+              </div>
+
+              <!-- Explanation Box (Hidden by default) -->
+              <div id="quiz-explanation" class="hidden rounded-xl p-4 border transition-all duration-300">
+                <div class="flex items-start gap-3">
+                  <div id="quiz-exp-icon" class="text-xl mt-0.5"></div>
+                  <div class="space-y-1">
+                    <h4 id="quiz-exp-title" class="font-bold text-sm"></h4>
+                    <p id="quiz-exp-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed"></p>
+                    <div id="quiz-law-ref" class="mt-2 text-xs font-semibold text-cyan-400 bg-cyan-950/50 px-2.5 py-1 rounded inline-block border border-cyan-800/50"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Controls -->
+              <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
+                <button id="quiz-prev-btn" onclick="prevQuestion()" class="px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors disabled:opacity-30 disabled:pointer-events-none">
+                  <i class="fa-solid fa-arrow-left mr-1"></i> Алдыңғы
+                </button>
+                <button id="quiz-next-btn" onclick="nextQuestion()" disabled class="px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 hover:opacity-90 transition-all disabled:opacity-40 disabled:pointer-events-none shadow-lg shadow-cyan-500/20">
+                  Келесі <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR: QUIZ TRACKER & STATS -->
+        <div class="space-y-6">
+          <div class="glass-card rounded-2xl p-6 border border-slate-800">
+            <h3 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-cyan-400"></i> Тест индикаторы
+            </h3>
+            <div id="quiz-dots-grid" class="grid grid-cols-5 gap-3 mb-6">
+              <!-- Dots generated by JS -->
+            </div>
+            <div class="space-y-3 border-t border-slate-800 pt-4 text-xs text-slate-400">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Дұрыс жауаптар:</span>
+                <span id="quiz-correct-count" class="font-bold text-slate-200">0</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Қате жауаптар:</span>
+                <span id="quiz-wrong-count" class="font-bold text-slate-200">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- QUICK LAW REFERENCE CARD -->
+          <div class="glass-card rounded-2xl p-6 border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/30">
+            <h4 class="text-sm font-bold text-cyan-400 mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved"></i> ҚР Денсаулық сақтау кодексі
+            </h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              2020 жылы қабылданған «Халық денсаулығы және денсаулық сақтау жүйесі туралы» ҚР Кодексі дәрігердің кәсіби жауапкершілігін сақтандыруды және құқықтық қорғалуын реттейді.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: MATCHING SYMBOLS -->
+    <section id="section-matching" class="tab-content hidden">
+      <div class="space-y-6">
+        <div class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800">
+          <div class="max-w-3xl">
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-100 mb-2">Медициналық символдар мен олардың мағынасы</h2>
+            <p class="text-sm text-slate-400">
+              Әрбір медициналық эмблеманың тарихи шығу тегі мен заңнамалық мағынасы бар. Символды таңдап, оған сәйкес сипаттамамен жұптаңыз!
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <!-- Left Column: Symbols -->
+            <div class="space-y-3">
+              <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-3">1. Эмблеманы таңдаңыз</h3>
+              <div id="matching-symbols-list" class="space-y-3">
+                <!-- JS handles rendering symbols -->
+              </div>
+            </div>
+
+            <!-- Right Column: Descriptions -->
+            <div class="space-y-3">
+              <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3">2. Мағынасы мен мәнін табыңыз</h3>
+              <div id="matching-desc-list" class="space-y-3">
+                <!-- JS handles rendering descriptions -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Matching Feedback Banner -->
+          <div id="matching-feedback" class="mt-8 p-4 rounded-xl hidden text-center text-sm font-semibold transition-all"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: LEGAL RIGHTS EXPLORER -->
+    <section id="section-explorer" class="tab-content hidden">
+      <div class="space-y-6">
+        <!-- Sub-tabs for Law Explorer -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-4">
+          <button onclick="switchLawSubTab('doctors')" id="subtab-doctors" class="sub-tab active-sub border border-cyan-500/50 bg-cyan-950/40 text-cyan-300 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+            <i class="fa-solid fa-user-doctor mr-1"></i> Дәрігер құқықтары
+          </button>
+          <button onclick="switchLawSubTab('secrecy')" id="subtab-secrecy" class="sub-tab border border-slate-800 bg-slate-900 text-slate-400 hover:text-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+            <i class="fa-solid fa-lock mr-1"></i> Дәрігерлік құпия
+          </button>
+          <button onclick="switchLawSubTab('patients')" id="subtab-patients" class="sub-tab border border-slate-800 bg-slate-900 text-slate-400 hover:text-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+            <i class="fa-solid fa-hospital-user mr-1"></i> Пациент міндеттері
+          </button>
+        </div>
+
+        <!-- Explorer Grid Container -->
+        <div id="law-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Dynamic Content Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-6 mt-12 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4">
+      <p>«Заң және медицина: Дәрігер құқығы мен символдары» интерактивті оқу модулі &copy; 2026</p>
+      <p class="mt-1 text-slate-600">ҚР «Халық денсаулығы және денсаулық сақтау жүйесі туралы» Кодексінің негізінде әзірленген</p>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Global App State
+    const state = {
+      score: 0,
+      quizCurrent: 0,
+      userQuizAnswers: {},
+      quizScore: 0,
+      matchedPairsCount: 0,
+      selectedSymbolId: null,
+      selectedDescId: null,
+      matchedSymbolIds: new Set(),
+      matchedDescIds: new Set()
+    };
+
+    // 1. QUIZ DATA (5 Scenarios)
+    const quizData = [
+      {
+        id: 1,
+        tag: "Бас тарту құқығы",
+        question: "Пациент дәрігердің белгілеген емдеу хаттамасын үнемі бұзып, қызметкерлерге дөрекілік көрсетеді. Дәрігердің бұл пациентті бақылаудан бас тартуға құқығы бар ма?",
+        options: [
+          { id: "a", text: "Жоқ, дәрігер қандай жағдай болмасын пациентті емдеуге міндетті." },
+          { id: "b", text: "Иә, егер шұғыл медициналық көмек қажет болмаса және басшылықты жазбаша құлағдар етсе." },
+          { id: "c", text: "Тек пациент басқа клиникаға өз еркімен ауысқанда ғана." },
+          { id: "d", text: "Иә, кез келген уақытта ешқандай себепсіз және ескертусіз бас тарта алады." }
+        ],
+        correct: "b",
+        lawRef: "ҚР Денсаулық сақтау кодексі, 270-бап",
+        explanation: "Дәрігер пациенттің өміріне тікелей қауіп төніп тұрмаған жағдайда, егер пациент медициналық нұсқауларды орындамаса, ұйым басшысын жазбаша түрде хабардар ете отырып емдеуден бас тарта алады."
+      },
+      {
+        id: 2,
+        tag: "Дәрігерлік құпия",
+        question: "Полиция қызметкері ресми жазбаша сұраусыз дәрігерден пациенттің диагнозын айтуды талап етті. Дәрігер ақпаратты беруге міндетті ме?",
+        options: [
+          { id: "a", text: "Иә, полиция өкілі талап еткен кез келген ақпарат дереу беріледі." },
+          { id: "b", text: "Жоқ, дәрігерлік құпия заңмен қорғалады. Ресми сот немесе прокуратура/тергеу қаулысысыз берілмейді." },
+          { id: "c", text: "Тек пациенттің туыстарының ауызша рұқсатымен береді." },
+          { id: "d", text: "Иә, егер пациент стационарда жатса." }
+        ],
+        correct: "b",
+        lawRef: "ҚР Денсаулық сақтау кодексі, 273-бап",
+        explanation: "Дәрігерлік құпия болып табылатын мәліметтерді пациенттің немесе оның заңды өкілінің келісімінсіз беруге тек заңда көзделген айрықша жағдайларда (тергеу, сот, инфекциялық қауіп) ғана жол беріледі."
+      },
+      {
+        id: 3,
+        tag: "Кәсіби қауіпсіздік",
+        question: "Медициналық процедура кезінде күтпеген азаматтық-құқықтық қателік (а асқыну) орын алды. Дәрігерді материалдық зияннан не қорғайды?",
+        options: [
+          { id: "a", text: "Дәрігер өз қалтасынан өтейді." },
+          { id: "b", text: "Медицина қызметкерлерінің кәсіби жауапкершілігін міндетті сақтандыру жүйесі." },
+          { id: "c", text: "Пациенттің келісім беруі барлық жауапкершілікті автоматты түрде алып тастайды." },
+          { id: "d", text: "Ешқандай заңдық қорғау тетігі жоқ." }
+        ],
+        correct: "b",
+        lawRef: "ҚР Денсаулық сақтау кодексі, 270-бап 3-бөлігі",
+        explanation: "ҚР-да медицина қызметкерлерінің кәсіби жауапкершілігін сақтандыру жүйесі пациентке келтірілген зиянды сақтандыру компаниясы арқылы өтеуді қамтамасыз етеді."
+      },
+      {
+        id: 4,
+        tag: "Ар-намысты қорғау",
+        question: "Пациенттің туысы әлеуметтік желіде дәрігер туралы жалған, абыройына нұқсан келтіретін видео жариялады. Дәрігер қандай құқықтық қадам жасай алады?",
+        options: [
+          { id: "a", text: "Ешнәрсе істей алмайды, себебі дәрігерлерге шағымдануға тыйым салынған." },
+          { id: "b", text: "Сотқа ар-намысын, абыройын және кәсіби беделін қорғау туралы шағым түсіріп, моральдық зиянды талап ету." },
+          { id: "c", text: "Тек пациентті емдеуді тоқтатумен шектеледі." },
+          { id: "d", text: "Жауап ретінде пациенттің диагнозын әлеуметтік желіде жариялау." }
+        ],
+        correct: "b",
+        lawRef: "ҚР Азаматтық кодексі, 143-бап",
+        explanation: "Медицина қызметкері өз беделі мен ар-намысын заңсыз жала жабудан немесе беделін түсіруден сот тәртібімен қорғауға және келтірілген моральдық зиянды өтетуге толық құқылы."
+      },
+      {
+        id: 5,
+        tag: "Эмблема заңнамасы",
+        question: "Жеке клиника жарнама мақсатында 'Қызыл Крест' эмблемасын логотип ретінде қолданды. Бұл заңды ма?",
+        options: [
+          { id: "a", text: "Иә, бұл барлық медицина мекемелеріне ортақ символ." },
+          { id: "b", text: "Жоқ, 'Қызыл Крест' және 'Қызыл Жартыай' халықаралық Женева конвенциясымен қорғалатын айрықша гуманитарлық белгілер." },
+          { id: "c", text: "Иә, егер мекеме жедел жәрдем қызметін көрсетсе." },
+          { id: "d", text: "Тек жергілікті әкімдіктің рұқсаты болса заңды." }
+        ],
+        correct: "b",
+        lawRef: "Женева Конвенциялары және ҚР Заңнамасы",
+        explanation: "Қызыл Крест белгісін коммерциялық немесе жеке медициналық ұйымдардың логотип ретінде пайдалануына халықаралық құқықпен қатаң тыйым салынған."
+      }
+    ];
+
+    // 2. MATCHING DATA (Symbols)
+    const matchingSymbols = [
+      { id: "sym-1", name: "Асклепий таяғы", icon: "fa-staff-snake", color: "text-amber-400" },
+      { id: "sym-2", name: "Гигиея тоасы (Чаша)", icon: "fa-prescription-bottle-medical", color: "text-cyan-400" },
+      { id: "sym-3", name: "Тіршілік жұлдызы", icon: "fa-star-of-life", color: "text-blue-500" },
+      { id: "sym-4", name: "Қызыл Крест", icon: "fa-cross", color: "text-rose-500" }
+    ];
+
+    const matchingDescs = [
+      { id: "desc-1", matchId: "sym-1", text: "Көне грек емшілік құдайының символы. Таяқ — емшінің қажымас сапарын, ал жылан — жаңару мен даналықты білдіреді." },
+      { id: "desc-2", matchId: "sym-2", text: "Фармация мен дәрі-дәрмек саласының халықаралық белгісі. Жылан уының мөлшеріне қарай — не ем, не у екенін айшықтайды." },
+      { id: "desc-3", matchId: "sym-3", text: "Шұғыл медициналық көмек (Жедел жәрдем) қызметінің алты бұрышты көк жұлдызды эмблемасы." },
+      { id: "desc-4", matchId: "sym-4", text: "Женева конвенциясымен қорғалатын, соғыс және төтенше жағдайдағы медициналық бейтараптық белгісі." }
+    ];
+
+    // 3. LAW EXPLORER DATA
+    const lawData = {
+      doctors: [
+        {
+          title: "Еңбек жағдайы мен жабдықталу",
+          desc: "Қауіпсіз, заманауи техникамен және жеке қорғаныс құралдарымен қамтамасыз етілген жұмыс орнын талап ету құқығы.",
+          law: "ҚР Денсаулық сақтау кодексі, 270-бап 1-бөлігі"
+        },
+        {
+          title: "Кәсіби жауапкершілікті сақтандыру",
+          desc: "Медициналық қателік салдарынан пациент өмірі мен денсаулығына зиян келгенде сақтандыру төлемін қамтамасыз ету.",
+          law: "ҚР Денсаулық сақтау кодексі, 270-бап 3-бөлігі"
+        },
+        {
+          title: "Біліктілікті арттыру мен оқу",
+          desc: "Мемлекет немесе жумыс беруші есебінен Үздіксіз кәсіби дамудан (Бұйрықтарға сай) өту және санатын көтеру.",
+          law: "ҚР Денсаулық сақтау кодексі, 268-бап"
+        },
+        {
+          title: "Абырой мен ар-намысты қорғау",
+          desc: "Пациенттер немесе третьи лица тарапынан негізсіз айыптаулар мен агрессиядан сот арқылы қорғалу.",
+          law: "ҚР Азаматтық Кодексі, 143-бап"
+        }
+      ],
+      secrecy: [
+        {
+          title: "Дәрігерлік құпияның қамту аймағы",
+          desc: "Пациенттің медициналық көмекке жүгіну фактісі, денсаулық жағдайы, диагнозы және емдеу барысы құпия сақталады.",
+          law: "ҚР Денсаулық сақтау кодексі, 273-бап 1-бөлігі"
+        },
+        {
+          title: "Құпияны жариялауға рұқсат жағдайлары",
+          desc: "Пациенттің жазбаша келісімі болғанда немесе ғылыми-оқу мақсатында аты-жөнінсіз пайдалану кезінде.",
+          law: "ҚР Денсаулық сақтау кодексі, 273-бап 2-бөлігі"
+        },
+        {
+          title: "Міндетті түрде хабарлау жағдайлары",
+          desc: "Инфекциялық аурулар қаупі, соққы/қылмыс іздері байқалғанда, құқық қорғау органдарына ресми хабарланады.",
+          law: "ҚР Денсаулық сақтау кодексі, 273-бап 4-бөлігі"
+        }
+      ],
+      patients: [
+        {
+          title: "Денсаулықты сақтау міндеті",
+          desc: "Пациент өз денсаулығына күтім жасауға және созылмалы аурулары болса, дәрігерлік бақылаудан өтуге міндетті.",
+          law: "ҚР Денсаулық сақтау кодексі, 135-бап"
+        },
+        {
+          title: "Нұсқауларды орындау",
+          desc: "Тағайындалған емдеу режимін, клиниканың ішкі тәртібін және дәрігердің заңды талаптарын сақтау.",
+          law: "ҚР Денсаулық сақтау кодексі, 135-бап 2-бөлігі"
+        },
+        {
+          title: "Медицина қызметкерлерін құрметтеу",
+          desc: "Дәрігерлер мен медбикелерге қатысты сыйластық таныту, дөрекілік пен агрессияға жол бермеу.",
+          law: "ҚР Денсаулық сақтау кодексі, 135-бап 3-бөлігі"
+        }
+      ]
+    };
+
+    // TAB NAVIGATION
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-tab').forEach(el => {
+        el.classList.remove('bg-gradient-to-r', 'from-emerald-500', 'to-cyan-500', 'text-slate-950', 'shadow-md');
+        el.classList.add('text-slate-400', 'hover:text-slate-200');
+      });
+
+      const targetTab = document.getElementById(`tab-${tabName}`);
+      const targetSection = document.getElementById(`section-${tabName}`);
+
+      targetSection.classList.remove('hidden');
+      targetTab.classList.remove('text-slate-400', 'hover:text-slate-200');
+      targetTab.classList.add('bg-gradient-to-r', 'from-emerald-500', 'to-cyan-500', 'text-slate-950', 'shadow-md');
+    }
+
+    // --- QUIZ LOGIC ---
+    function renderQuiz() {
+      const q = quizData[state.quizCurrent];
+      document.getElementById('quiz-current-num').innerText = state.quizCurrent + 1;
+      document.getElementById('quiz-total-num').innerText = quizData.length;
+      document.getElementById('quiz-tag').innerHTML = `<i class="fa-solid fa-gavel"></i> ${q.tag}`;
+      document.getElementById('quiz-question-text').innerText = q.question;
+
+      const progressPercent = Math.round(((state.quizCurrent + 1) / quizData.length) * 100);
+      document.getElementById('quiz-progress-percent').innerText = `${progressPercent}%`;
+      document.getElementById('quiz-progress-bar').style.width = `${progressPercent}%`;
+
+      // Options
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+
+      const userAnswer = state.userQuizAnswers[state.quizCurrent];
+      const isAnswered = userAnswer !== undefined;
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-4 rounded-xl border transition-all flex items-start gap-3 ${
+          !isAnswered ? 'bg-slate-800/40 border-slate-700/60 hover:bg-slate-800 hover:border-cyan-500/50' : ''
+        }`;
+
+        if (isAnswered) {
+          if (opt.id === q.correct) {
+            btn.classList.add('bg-emerald-950/40', 'border-emerald-500', 'text-emerald-200');
+          } else if (opt.id === userAnswer) {
+            btn.classList.add('bg-rose-950/40', 'border-rose-500', 'text-rose-200');
+          } else {
+            btn.classList.add('bg-slate-900/40', 'border-slate-800', 'opacity-50');
+          }
+        }
+
+        btn.onclick = () => selectQuizOption(opt.id);
+
+        btn.innerHTML = `
+          <div class="w-6 h-6 rounded-full border flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 ${
+            isAnswered && opt.id === q.correct ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 
+            isAnswered && opt.id === userAnswer ? 'bg-rose-500 border-rose-400 text-slate-950' : 'border-slate-600 text-slate-400'
+          }">
+            ${opt.id.toUpperCase()}
+          </div>
+          <span class="text-sm font-medium leading-relaxed">${opt.text}</span>
+        `;
+        optionsContainer.appendChild(btn);
+      });
+
+      // Explanation
+      const expBox = document.getElementById('quiz-explanation');
+      if (isAnswered) {
+        expBox.classList.remove('hidden');
+        const isCorrect = userAnswer === q.correct;
+        expBox.className = `rounded-xl p-4 border transition-all duration-300 ${
+          isCorrect ? 'bg-emerald-950/30 border-emerald-800/60' : 'bg-rose-950/30 border-rose-800/60'
+        }`;
+        document.getElementById('quiz-exp-icon').innerHTML = isCorrect 
+          ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>' 
+          : '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
+        document.getElementById('quiz-exp-title').innerText = isCorrect ? 'Өте жақсы! Дұрыс жауап' : 'Қате жауап!';
+        document.getElementById('quiz-exp-title').className = `font-bold text-sm ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`;
+        document.getElementById('quiz-exp-text').innerText = q.explanation;
+        document.getElementById('quiz-law-ref').innerText = q.lawRef;
+        document.getElementById('quiz-next-btn').disabled = false;
+      } else {
+        expBox.classList.add('hidden');
+        document.getElementById('quiz-next-btn').disabled = true;
+      }
+
+      document.getElementById('quiz-prev-btn').disabled = state.quizCurrent === 0;
+      renderQuizDots();
+    }
+
+    function selectQuizOption(optId) {
+      if (state.userQuizAnswers[state.quizCurrent] !== undefined) return;
+      state.userQuizAnswers[state.quizCurrent] = optId;
+
+      if (optId === quizData[state.quizCurrent].correct) {
+        state.score += 20;
+        state.quizScore += 1;
+      }
+      updateGlobalScore();
+      renderQuiz();
+    }
+
+    function nextQuestion() {
+      if (state.quizCurrent < quizData.length - 1) {
+        state.quizCurrent++;
+        renderQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      if (state.quizCurrent > 0) {
+        state.quizCurrent--;
+        renderQuiz();
+      }
+    }
+
+    function renderQuizDots() {
+      const grid = document.getElementById('quiz-dots-grid');
+      grid.innerHTML = '';
+      let correctCount = 0;
+      let wrongCount = 0;
+
+      quizData.forEach((q, idx) => {
+        const dot = document.createElement('button');
+        dot.onclick = () => {
+          state.quizCurrent = idx;
+          renderQuiz();
+        };
+        const ans = state.userQuizAnswers[idx];
+
+        let bgClass = 'bg-slate-800 text-slate-400 border-slate-700';
+        if (ans !== undefined) {
+          if (ans === q.correct) {
+            bgClass = 'bg-emerald-500 text-slate-950 font-bold border-emerald-400';
+            correctCount++;
+          } else {
+            bgClass = 'bg-rose-500 text-slate-950 font-bold border-rose-400';
+            wrongCount++;
+          }
+        }
+        if (idx === state.quizCurrent) {
+          bgClass += ' ring-2 ring-cyan-400 ring-offset-2 ring-offset-slate-900';
+        }
+
+        dot.className = `w-9 h-9 rounded-lg border flex items-center justify-center text-xs font-semibold transition-all ${bgClass}`;
+        dot.innerText = idx + 1;
+        grid.appendChild(dot);
+      });
+
+      document.getElementById('quiz-correct-count').innerText = correctCount;
+      document.getElementById('quiz-wrong-count').innerText = wrongCount;
+    }
+
+    // --- MATCHING SYMBOLS LOGIC ---
+    function renderMatching() {
+      const symContainer = document.getElementById('matching-symbols-list');
+      const descContainer = document.getElementById('matching-desc-list');
+
+      symContainer.innerHTML = '';
+      descContainer.innerHTML = '';
+
+      matchingSymbols.forEach(sym => {
+        const btn = document.createElement('button');
+        const isMatched = state.matchedSymbolIds.has(sym.id);
+        const isSelected = state.selectedSymbolId === sym.id;
+
+        btn.className = `w-full text-left p-4 rounded-xl border transition-all flex items-center justify-between ${
+          isMatched ? 'bg-emerald-950/30 border-emerald-600/50 opacity-60 cursor-default' :
+          isSelected ? 'bg-cyan-950/60 border-cyan-400 ring-1 ring-cyan-400' :
+          'bg-slate-800/40 border-slate-700/60 hover:bg-slate-800'
+        }`;
+
+        btn.disabled = isMatched;
+        btn.onclick = () => handleSymbolSelect(sym.id);
+
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <i class="fa-solid ${sym.icon} ${sym.color} text-xl"></i>
+            <span class="font-semibold text-sm text-slate-200">${sym.name}</span>
+          </div>
+          ${isMatched ? '<i class="fa-solid fa-check text-emerald-400"></i>' : '<i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>'}
+        `;
+        symContainer.appendChild(btn);
+      });
+
+      // Render Descriptions (Shuffled initially or rendered deterministically)
+      matchingDescs.forEach(desc => {
+        const btn = document.createElement('button');
+        const isMatched = state.matchedDescIds.has(desc.id);
+        const isSelected = state.selectedDescId === desc.id;
+
+        btn.className = `w-full text-left p-4 rounded-xl border transition-all ${
+          isMatched ? 'bg-emerald-950/30 border-emerald-600/50 opacity-60 cursor-default' :
+          isSelected ? 'bg-cyan-950/60 border-cyan-400 ring-1 ring-cyan-400' :
+          'bg-slate-800/40 border-slate-700/60 hover:bg-slate-800'
+        }`;
+
+        btn.disabled = isMatched;
+        btn.onclick = () => handleDescSelect(desc.id);
+
+        btn.innerHTML = `
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${desc.text}</p>
+        `;
+        descContainer.appendChild(btn);
+      });
+    }
+
+    function handleSymbolSelect(symId) {
+      state.selectedSymbolId = symId;
+      checkMatchAttempt();
+      renderMatching();
+    }
+
+    function handleDescSelect(descId) {
+      state.selectedDescId = descId;
+      checkMatchAttempt();
+      renderMatching();
+    }
+
+    function checkMatchAttempt() {
+      if (state.selectedSymbolId && state.selectedDescId) {
+        const descObj = matchingDescs.find(d => d.id === state.selectedDescId);
+        const feedback = document.getElementById('matching-feedback');
+
+        if (descObj && descObj.matchId === state.selectedSymbolId) {
+          // Correct Match!
+          state.matchedSymbolIds.add(state.selectedSymbolId);
+          state.matchedDescIds.add(state.selectedDescId);
+          state.score += 25;
+          updateGlobalScore();
+
+          feedback.classList.remove('hidden', 'bg-rose-950/80', 'text-rose-300', 'border-rose-800');
+          feedback.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border', 'border-emerald-800');
+          feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Дұрыс сәйкестік! +25 ұпай';
+        } else {
+          // Wrong Match
+          feedback.classList.remove('hidden', 'bg-emerald-950/80', 'text-emerald-300', 'border-emerald-800');
+          feedback.classList.add('bg-rose-950/80', 'text-rose-300', 'border', 'border-rose-800');
+          feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i> Сәйкес келмейді. Қайталап көріңіз!';
+        }
+
+        state.selectedSymbolId = null;
+        state.selectedDescId = null;
+
+        setTimeout(() => {
+          feedback.classList.add('hidden');
+        }, 3000);
+      }
+    }
+
+    // --- LAW EXPLORER LOGIC ---
+    function switchLawSubTab(subCategory) {
+      document.querySelectorAll('.sub-tab').forEach(btn => {
+        btn.className = 'sub-tab border border-slate-800 bg-slate-900 text-slate-400 hover:text-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all';
+      });
+
+      const activeBtn = document.getElementById(`subtab-${subCategory}`);
+      activeBtn.className = 'sub-tab border border-cyan-500/50 bg-cyan-950/40 text-cyan-300 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all';
+
+      renderLawCards(subCategory);
+    }
+
+    function renderLawCards(subCategory) {
+      const container = document.getElementById('law-cards-container');
+      container.innerHTML = '';
+
+      const items = lawData[subCategory] || [];
+
+      items.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'glass-card rounded-2xl p-6 border border-slate-800 space-y-3 hover:border-slate-700 transition-all';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <h4 class="font-bold text-base text-slate-100 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-cyan-950 border border-cyan-700/50 text-cyan-400 text-xs flex items-center justify-center font-bold">${idx + 1}</span>
+              ${item.title}
+            </h4>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${item.desc}</p>
+          <div class="pt-2">
+            <span class="inline-block text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-3 py-1 rounded-full">
+              <i class="fa-solid fa-scale-balanced mr-1"></i> ${item.law}
+            </span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // GLOBAL UTILS
+    function updateGlobalScore() {
+      document.getElementById('global-score').innerText = state.score;
+    }
+
+    function resetAllProgress() {
+      state.score = 0;
+      state.quizCurrent = 0;
+      state.userQuizAnswers = {};
+      state.quizScore = 0;
+      state.selectedSymbolId = null;
+      state.selectedDescId = null;
+      state.matchedSymbolIds.clear();
+      state.matchedDescIds.clear();
+
+      updateGlobalScore();
+      renderQuiz();
+      renderMatching();
+    }
+
+    // INITIALIZATION
+    window.onload = function() {
+      renderQuiz();
+      renderMatching();
+      renderLawCards('doctors');
+    };
+  </script>
+</body>
+</html>
